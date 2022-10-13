@@ -1,3 +1,7 @@
 package token
 
-type Position struct {}
+type Position struct {
+  Filename string
+  Offset   int
+  Line     int
+}

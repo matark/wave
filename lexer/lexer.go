@@ -2,40 +2,39 @@ package lexer
 
 import "neweos.de/sube/token"
 
-type Tag [2]interface{}
+type Token struct {
+  Value string
+  Kind  token.Token
+  Pos   token.Position
+}
 
 type Lexer struct {
-  tokens  []token.Token
+  tokens  []Token
   input   []rune
-  tags    []Tag
   line    int
   start   int
   current int
 }
 
-func (l *Lexer) NextToken() token.Token {
-  if l.scanToken() {
-    return l.tokens[len(l.tokens)-1]
+func (l *Lexer) NextToken() Token {
+  for {
+    if l.scanToken() { break }
   }
-
-  return token.EOF
+  // if l.scanToken() {
+  //   return l.tokens[len(l.tokens)-1]
+  // }
+  // return token.EOF
 }
 
-func (l *Lexer) ScanTokens() {
+func (l *Lexer) ScanTokens() []Token {
   for {
     if l.isEnd() { break }
     l.start = l.current
     l.scanToken()
-    //       value := string(l.input[pred(l.current)])
-    //       report(l.line, fmt.Sprintf("unexpected '%s'", value))
   }
 
-// func (l *Lexer) scanTokens() []token.Token {
-//   l.start = l.current
-//   l.produce(token.EOF)
-//   return l.tokens
-// func [](code string) []token.[Token] {
-//   return New(code).scanTokens()
+  l.produce(token.EOF)
+  return l.tokens
 }
 
 func (l *Lexer) scanToken() bool {
@@ -102,13 +101,12 @@ func (l *Lexer) stringToken(c rune) bool {
     }
 
     if l.isEnd() {
-      //     report(l.line, "unterminated string")
-      //     return false
+      // report(l.line, "unterminated string")
       return false
     }
 
-    //   value := string(l.input[l.start+1:l.current-1])
-    //   l.tokens = append(l.tokens, l.makeToken(token.String, value))
+    // value := string(l.input[l.start+1:l.current-1])
+    // l.tokens = append(l.tokens, l.makeToken(token.String, value))
     l.advance()
     return true
   }
@@ -129,10 +127,8 @@ func (l *Lexer) numberToken(c rune) bool {
       }
     }
 
-    //   value, _ := strconv.ParseFloat(string(l.input[l.start:l.current]), 64)
-    //   l.tokens = append(l.tokens, l.makeToken(token.Number, value))
-    l.produce(token.Int)
-
+    lexeme := string(l.input[l.start:l.current])
+    l.tokens = append(l.tokens, l.makeToken(token.Int, lexeme))
     return true
   }
   return false
@@ -159,7 +155,6 @@ func (l *Lexer) singleToken(c rune) bool {
     default:
       return false
   }
-
   return true
 }
 
@@ -198,7 +193,6 @@ func (l *Lexer) doubleToken(c rune) bool {
     default:
       return false
   }
-
   return true
 }
 
@@ -231,12 +225,24 @@ func (l *Lexer) tripleToken(c rune) bool {
     default:
       return false
   }
-
   return true
 }
 
+func (l *Lexer) makeToken(tok token.Token, literal any) Token {
+  pos := token.Position{Line: l.line}
+  value, ok := literal.(string)
+
+  if ok {}
+
+  return Token{
+    Value: value,
+    Kind: tok,
+    Pos: pos,
+  }
+}
+
 func (l *Lexer) produce(tok token.Token) {
-//   l.tokens = append(l.tokens, l.makeToken(tokenType, nil))
+  l.tokens = append(l.tokens, l.makeToken(tok, nil))
 }
 
 func (l *Lexer) match(c rune) bool {
@@ -245,7 +251,6 @@ func (l *Lexer) match(c rune) bool {
     l.current += 1
     return true
   }
-
   return false
 }
 
@@ -258,7 +263,6 @@ func (l *Lexer) peekNext() rune {
   if l.current + 1 < len(l.input) {
     return l.input[l.current+1]
   }
-
   return 0
 }
 
@@ -273,11 +277,12 @@ func (l *Lexer) isEnd() bool {
 }
 
 func Tokenize() []string {
+  return make([]string, 0)
 }
 
 func New(code string) *Lexer {
   return &Lexer{
-    tokens: make([]token.Token, 0),
+    tokens: make([]Token, 0),
     input: []rune(code),
     line: 1,
   }
