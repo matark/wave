@@ -24,9 +24,41 @@ func (l *Lexer) NextToken() token.Token {
 func (l *Lexer) scanToken() bool {
   c := l.advance()
 
+  if l.skipWhitespace(c) {
+    return false
+  }
+
+  if l.skipComment(c) {
+    return false
+  }
+
   return l.singleToken(c) ||
          l.doubleToken(c) ||
          l.tripleToken(c)
+}
+
+func (l *Lexer) skipWhitespace(c rune) bool {
+  if c == '\n' {
+    l.line += 1
+    return true
+  }
+
+  return c == '\r' ||
+         c == '\t' ||
+         c == ' '
+}
+
+func (l *Lexer) skipComment(c rune) bool {
+  if c == '/' && l.match('/') {
+    for {
+      if l.peek() == '\n' || l.isEnd() {
+        break
+      }
+      l.advance()
+    }
+    return true
+  }
+  return false
 }
 
 func (l *Lexer) singleToken(c rune) bool {
@@ -175,7 +207,6 @@ func Tokenize() []string {
 //     start: 0,
 //     line: 1,
 //   }
-
 // func (l *Lexer) literalToken(c rune) bool {
 // return l.identifierToken(c) ||
 //        l.commentToken(c)    ||
