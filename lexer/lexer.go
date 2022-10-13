@@ -34,7 +34,8 @@ func (l *Lexer) scanToken() bool {
 
   return l.singleToken(c) ||
          l.doubleToken(c) ||
-         l.tripleToken(c)
+         l.tripleToken(c) ||
+         l.numberToken(c)
 }
 
 func (l *Lexer) skipWhitespace(c rune) bool {
@@ -61,11 +62,35 @@ func (l *Lexer) skipComment(c rune) bool {
   return false
 }
 
+func (l *Lexer) numberToken(c rune) bool {
+  if isDigit(c) {
+    for isDigit(l.peek()) {
+      l.advance()
+    }
+
+    if l.peek() == '.' && isDigit(l.peekNext()) {
+      l.advance()
+
+      for isDigit(l.peek()) {
+        l.advance()
+      }
+    }
+
+    //   value, _ := strconv.ParseFloat(string(l.input[l.start:l.current]), 64)
+    //   l.tokens = append(l.tokens, l.makeToken(token.Number, value))
+    l.produce(token.Int)
+
+    return true
+  }
+  return false
+}
+
 func (l *Lexer) singleToken(c rune) bool {
   switch c {
     case '+': l.produce(token.Plus)
     case '-': l.produce(token.Minus)
     case '*': l.produce(token.Star)
+    case '/': l.produce(token.Slash)
     case '%': l.produce(token.Modulo)
     case '.': l.produce(token.Dot)
     case ';': l.produce(token.Semi)
