@@ -23,20 +23,110 @@ func (l *Lexer) NextToken() token.Token {
 
 func (l *Lexer) scanToken() bool {
   c := l.advance()
-  return false
-  // return l.identifierToken(c) ||
-  //        l.commentToken(c)    ||
-  //        l.whitespaceToken(c) ||
-  //        l.stringToken(c)     ||
-  //        l.numberToken(c)     ||
-  //        l.regexToken(c)      ||
-  //        l.literalToken(c)
+
+  return l.singleToken(c) ||
+         l.doubleToken(c) ||
+         l.tripleToken(c)
+}
+
+func (l *Lexer) singleToken(c rune) bool {
+  switch c {
+    case '+': l.produce(token.Plus)
+    case '-': l.produce(token.Minus)
+    case '*': l.produce(token.Star)
+    case '%': l.produce(token.Modulo)
+    case '.': l.produce(token.Dot)
+    case ';': l.produce(token.Semi)
+    case ':': l.produce(token.Colon)
+    case '(': l.produce(token.LeftParen)
+    case '[': l.produce(token.LeftSquare)
+    case '{': l.produce(token.LeftBrace)
+    case ')': l.produce(token.RightParen)
+    case ']': l.produce(token.RightSquare)
+    case '}': l.produce(token.RightBrace)
+    case ',': l.produce(token.Comma)
+    case '~': l.produce(token.Tilde)
+    default:
+      return false
+  }
+
+  return true
+}
+
+func (l *Lexer) doubleToken(c rune) bool {
+  switch c {
+    case '!':
+      if l.match('=') {
+        l.produce(token.BangEq)
+      } else {
+        l.produce(token.Bang)
+      }
+    case '=':
+      if l.match('=') {
+        l.produce(token.EqualEq)
+      } else {
+        l.produce(token.Equal)
+      }
+    case '>':
+      if l.match('=') {
+        l.produce(token.GreaterEq)
+      } else {
+        l.produce(token.Greater)
+      }
+    case '<':
+      if l.match('=') {
+        l.produce(token.LessEq)
+      } else {
+        l.produce(token.Less)
+      }
+    case '?':
+      if l.match('.') {
+        l.produce(token.QuestionDot)
+      } else {
+        l.produce(token.Question)
+      }
+    default:
+      return false
+  }
+
+  return true
+}
+
+func (l *Lexer) tripleToken(c rune) bool {
+  switch c {
+    case '&':
+      if l.match('&') {
+        if l.match('=') {
+          l.produce(token.AndAndEq)
+        } else {
+          l.produce(token.AndAnd)
+        }
+      } else {
+        l.produce(token.And)
+      }
+    case '|':
+      if l.match('|') {
+        if l.match('=') {
+          l.produce(token.OrOrEq)
+        } else {
+          l.produce(token.OrOr)
+        }
+      } else {
+        if l.match('>') {
+          l.produce(token.Pipeline)
+        } else {
+          l.produce(token.Or)
+        }
+      }
+    default:
+      return false
+  }
+
+  return true
 }
 
 func (l *Lexer) produce(tok token.Token) {
-
 //   l.tokens = append(l.tokens, l.makeToken(tokenType, nil))
-// }
 }
 
 func (l *Lexer) match(c rune) bool {
@@ -74,3 +164,23 @@ func (l *Lexer) isEnd() bool {
 
 func Tokenize() []string {
 }
+
+// func [](code string) []token.[Token] {
+//   return New(code).scanTokens()
+// func New(code string) *Lexer {
+//   return &Lexer{
+//     tokens: make([]token.Token, 0),
+//     input: []rune(code),
+//     current: 0,
+//     start: 0,
+//     line: 1,
+//   }
+
+// func (l *Lexer) literalToken(c rune) bool {
+// return l.identifierToken(c) ||
+//        l.commentToken(c)    ||
+//        l.whitespaceToken(c) ||
+//        l.stringToken(c)     ||
+//        l.numberToken(c)     ||
+//        l.regexToken(c)      ||
+//        l.literalToken(c)
