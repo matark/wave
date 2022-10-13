@@ -21,6 +21,23 @@ func (l *Lexer) NextToken() token.Token {
   return token.EOF
 }
 
+func (l *Lexer) ScanTokens() {
+  for {
+    if l.isEnd() { break }
+    l.start = l.current
+    l.scanToken()
+    //       value := string(l.input[pred(l.current)])
+    //       report(l.line, fmt.Sprintf("unexpected '%s'", value))
+  }
+
+// func (l *Lexer) scanTokens() []token.Token {
+//   l.start = l.current
+//   l.produce(token.EOF)
+//   return l.tokens
+// func [](code string) []token.[Token] {
+//   return New(code).scanTokens()
+}
+
 func (l *Lexer) scanToken() bool {
   c := l.advance()
 
@@ -36,7 +53,8 @@ func (l *Lexer) scanToken() bool {
          l.doubleToken(c) ||
          l.tripleToken(c) ||
          l.stringToken(c) ||
-         l.numberToken(c)
+         l.numberToken(c) ||
+         l.identifierToken(c)
 }
 
 func (l *Lexer) skipWhitespace(c rune) bool {
@@ -257,16 +275,10 @@ func (l *Lexer) isEnd() bool {
 func Tokenize() []string {
 }
 
-// func [](code string) []token.[Token] {
-//   return New(code).scanTokens()
-// func New(code string) *Lexer {
-//   return &Lexer{
-//     tokens: make([]token.Token, 0),
-//     input: []rune(code),
-//     current: 0,
-//     start: 0,
-//     line: 1,
-//   }
-// func (l *Lexer) literalToken(c rune) bool {
-// return l.identifierToken(c) ||
-//        l.literalToken(c)
+func New(code string) *Lexer {
+  return &Lexer{
+    tokens: make([]token.Token, 0),
+    input: []rune(code),
+    line: 1,
+  }
+}
