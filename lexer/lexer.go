@@ -35,6 +35,7 @@ func (l *Lexer) scanToken() bool {
   return l.singleToken(c) ||
          l.doubleToken(c) ||
          l.tripleToken(c) ||
+         l.stringToken(c) ||
          l.numberToken(c)
 }
 
@@ -57,6 +58,40 @@ func (l *Lexer) skipComment(c rune) bool {
       }
       l.advance()
     }
+    return true
+  }
+  return false
+}
+
+func (l *Lexer) identifierToken(c rune) bool {
+  if isAlpha(c) {
+    for isAlphaNumeric(l.peek()) {
+      l.advance()
+    }
+
+    value := string(l.input[l.start:l.current])
+    l.produce(token.Lookup(value))
+  }
+  return false
+}
+
+func (l *Lexer) stringToken(c rune) bool {
+  if c == '"' {
+    for {
+      if l.peek() == '"' || l.isEnd() { break }
+      if l.peek() == '\n' { l.line += 1 }
+      l.advance()
+    }
+
+    if l.isEnd() {
+      //     report(l.line, "unterminated string")
+      //     return false
+      return false
+    }
+
+    //   value := string(l.input[l.start+1:l.current-1])
+    //   l.tokens = append(l.tokens, l.makeToken(token.String, value))
+    l.advance()
     return true
   }
   return false
@@ -234,9 +269,4 @@ func Tokenize() []string {
 //   }
 // func (l *Lexer) literalToken(c rune) bool {
 // return l.identifierToken(c) ||
-//        l.commentToken(c)    ||
-//        l.whitespaceToken(c) ||
-//        l.stringToken(c)     ||
-//        l.numberToken(c)     ||
-//        l.regexToken(c)      ||
 //        l.literalToken(c)
