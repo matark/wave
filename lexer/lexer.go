@@ -16,16 +16,6 @@ type Lexer struct {
   current int
 }
 
-func (l *Lexer) NextToken() Token {
-  for {
-    if l.scanToken() { break }
-  }
-  // if l.scanToken() {
-  //   return l.tokens[len(l.tokens)-1]
-  // }
-  // return token.EOF
-}
-
 func (l *Lexer) ScanTokens() []Token {
   for {
     if l.isEnd() { break }
@@ -105,8 +95,8 @@ func (l *Lexer) stringToken(c rune) bool {
       return false
     }
 
-    // value := string(l.input[l.start+1:l.current-1])
-    // l.tokens = append(l.tokens, l.makeToken(token.String, value))
+    value := string(l.input[l.start+1:l.current-1])
+    l.addToken(token.String, value)
     l.advance()
     return true
   }
@@ -128,7 +118,8 @@ func (l *Lexer) numberToken(c rune) bool {
     }
 
     lexeme := string(l.input[l.start:l.current])
-    l.tokens = append(l.tokens, l.makeToken(token.Int, lexeme))
+    l.addToken(token.Int, lexeme)
+
     return true
   }
   return false
@@ -230,15 +221,17 @@ func (l *Lexer) tripleToken(c rune) bool {
 
 func (l *Lexer) makeToken(tok token.Token, literal any) Token {
   pos := token.Position{Line: l.line}
-  value, ok := literal.(string)
-
-  if ok {}
+  value, _ := literal.(string)
 
   return Token{
     Value: value,
     Kind: tok,
     Pos: pos,
   }
+}
+
+func (l *Lexer) addToken(tok token.Token, value string) {
+  l.tokens = append(l.tokens, l.makeToken(tok, value))
 }
 
 func (l *Lexer) produce(tok token.Token) {
@@ -276,8 +269,15 @@ func (l *Lexer) isEnd() bool {
   return l.current >= len(l.input)
 }
 
-func Tokenize() []string {
-  return make([]string, 0)
+func Tokenize(code string) []string {
+  tokens := New(code).ScanTokens()
+  values := make([]string, 0)
+
+  for _, tok := range tokens {
+    values = append(values, tok.Value)
+  }
+
+  return values
 }
 
 func New(code string) *Lexer {
