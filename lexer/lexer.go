@@ -77,7 +77,7 @@ func (l *Lexer) identifierToken(c rune) bool {
     }
 
     value := string(l.input[l.start:l.current])
-    l.produce(token.Lookup(value))
+    l.addToken(token.Lookup(value), value)
   }
   return false
 }
@@ -98,6 +98,7 @@ func (l *Lexer) stringToken(c rune) bool {
     value := string(l.input[l.start+1:l.current-1])
     l.addToken(token.String, value)
     l.advance()
+
     return true
   }
   return false
