@@ -1,5 +1,7 @@
 package ast
 
+import "neweos.de/sube/token"
+
 type Node interface {}
 
 type Expression interface {
@@ -16,31 +18,68 @@ type Declaration interface {
   Statement
 }
 
+type Function struct {
+  Params []token.Token
+  Body   BlockStatement
+}
+
+type BlockStatement struct {
+  Statement
+  Body []Statement
+}
+
+type FunctionDeclaration struct {
+  Declaration
+  *Function
+  Identifier token.Token
+}
+
+type FunctionExpression struct {
+  Expression
+  *Function
+}
+
+type ExpressionStatement struct {
+  Statement
+  Body Expression
+}
+
+type ReturnStatement struct {
+  Statement
+  Argument Expression
+  // Keyword   token.Token
+  // Value     Expression
+}
+
+type BreakStatement struct {
+  Statement
+  Label Expression
+}
+
+type ContinueStatement struct {
+  Statement
+  Label Expression
+}
+
+type IfStatement struct {
+  Statement
+  Condition Expression
+  Then Statement
+  Else Statement
+}
+
+type ForStatement struct {
+
+}
+
+type LoopStatement struct {
+  Statement
+  Condition Expression
+  Body Statement
+}
+
 // type Program struct {
 //   Node
-// }
-
-// type IfStatement struct {
-//   Condition Expression
-//   Then      Statement
-//   Else      Statement
-//   Statement
-// }
-
-// type WhileStatement struct {
-//   Condition Expression
-//   Body      Statement
-//   Statement
-// }
-
-// type BlockStatement struct {
-//   Body      []Statement
-//   Statement
-// }
-
-// type ExpressionStatement struct {
-//   Expression Expression
-//   Statement
 // }
 
 // type VariableDeclaration struct {
@@ -49,34 +88,16 @@ type Declaration interface {
 //   Declaration
 // }
 
-// type FunctionDeclaration struct {
-//   Name   token.Token
-//   Params []token.Token
-//   Body   []Statement
-//   Declaration
-// }
-
-// type ReturnStatement struct {
-//   Keyword   token.Token
-//   Value     Expression
-//   Statement
-// }
-
-// type EchoStatement struct {
-//   Expression Expression
-//   Statement
-// }
-
-// type ClassMethod struct {
-//   Kind        string // "constructor" | "method"
-//   Declaration FunctionDeclaration
-// }
-
 // type ClassDeclaration struct {
 //   Name        token.Token
 //   Methods     []ClassMethod
 //   SuperClass  *VariableExpression
 //   Declaration
+// }
+
+// type ClassMethod struct {
+//   Kind        string // "constructor" | "method"
+//   Declaration FunctionDeclaration
 // }
 
 // type LiteralExpression struct {
