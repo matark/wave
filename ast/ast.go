@@ -18,6 +18,10 @@ type Declaration interface {
   Statement
 }
 
+type Identifier struct {
+  Expression
+}
+
 type Function struct {
   Params []token.Token
   Body   BlockStatement
