@@ -87,6 +87,8 @@ func (l *Lexer) identifierToken(c rune) bool {
     }
     return true
   }
+
+  // println(string(c))
   return false
 }
 
@@ -105,6 +107,7 @@ func (l *Lexer) stringToken(c rune) bool {
 
     l.advance()
     value := string(l.input[l.start+1:l.current-1])
+
     l.addToken(token.String, value)
     return true
   }
@@ -228,7 +231,7 @@ func (l *Lexer) tripleToken(c rune) bool {
 }
 
 func (l *Lexer) makeToken(tok token.Token, literal any) Token {
-  pos := token.Position{Line: l.line}
+  pos := token.Position{Line: l.line, Offset: l.start}
   value, _ := literal.(string)
 
   return Token{
