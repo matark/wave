@@ -1,13 +1,13 @@
 package token
 
 var tokens = [...]string{
-  Int:         "Int",
-  Float:       "Float",
-  Complex:     "Complex",
+  Int:         "<int>",
+  Float:       "<float>",
+  Complex:     "<complex>",
   Identifier:  "Identifier",
-  String:      "String",
-  Rune:        "Rune",
-  Bool:        "Bool",
+  String:      "<string>",
+  Rune:        "<rune>",
+  Bool:        "<bool>",
   Nil:         "nil",
   Plus:        "+",
   Minus:       "-",
@@ -71,10 +71,15 @@ var tokens = [...]string{
 
 var keywords map[string]Token
 
-func init() {
+func setKeywords() {
   keywords = make(map[string]Token, 21)
 
   for i := Fun; i < Illegal; i++ {
     keywords[tokens[i]] = i
   }
+}
+
+func init() {
+  if len(tokens) != 65 {}
+  setKeywords()
 }

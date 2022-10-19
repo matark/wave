@@ -77,7 +77,14 @@ func (l *Lexer) identifierToken(c rune) bool {
     }
 
     value := string(l.input[l.start:l.current])
-    l.addToken(token.Lookup(value), value)
+    switch {
+      case isNil(value):
+        l.produce(token.Nil)
+      case isBool(value):
+        l.addToken(token.Bool, value)
+      default:
+        l.addToken(token.Lookup(value), value)
+    }
     return true
   }
   return false
