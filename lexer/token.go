@@ -13,11 +13,16 @@ func (tok Token) String() string {
 }
 
 func (tok Token) Lexeme() string {
-  if tok.Type == token.String {
-    return "" + tok.Value + ""
+  if tok.Value == "" {
+    return tok.Type.String()
   }
 
-  return tok.Value
+  switch tok.Type {
+    case token.String:
+      return "\"" + tok.Value + "\""
+    default:
+      return tok.Value
+  }
 }
 
-// //   Pos   token.Position
+// Pos   token.Position

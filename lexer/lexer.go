@@ -282,7 +282,7 @@ func Tokenize(code string) []string {
   values := make([]string, 0)
 
   for _, tok := range tokens {
-    values = append(values, tok.Value)
+    values = append(values, tok.Lexeme())
   }
 
   return values
