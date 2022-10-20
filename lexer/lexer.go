@@ -225,13 +225,16 @@ func (l *Lexer) tripleToken(c rune) bool {
 }
 
 func (l *Lexer) makeToken(tok token.Token, literal any) Token {
-  pos := token.Position{Line: l.line, Offset: l.start}
   value, _ := literal.(string)
+  pos := token.Position{
+    Offset: l.start,
+    Line: l.line,
+  }
 
   return Token{
+    Position: pos,
     Value: value,
-    Kind: tok,
-    Pos: pos,
+    Type: tok,
   }
 }
 

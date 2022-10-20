@@ -5,6 +5,7 @@ import "neweos.de/sube/token"
 type Token struct {
   Type  token.Token
   Value string
+  token.Position
 }
 
 func (tok Token) String() string {
