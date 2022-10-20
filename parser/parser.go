@@ -9,9 +9,15 @@ type Parser struct {
   current int
 }
 
-func (p *Parser) match(tokens ...token.Token) bool {
-  for _, tok := range tokens {
-    if p.check(tok) {
+func (p *Parser) consume(tok token.Token, message string) lexer.Token {
+  if p.check(tok) { return p.advance() }
+  //   panic(ParseError{token: p.peek(), message: message})
+  panic(message)
+}
+
+func (p *Parser) match(types ...token.Token) bool {
+  for _, tokenType := range types {
+    if p.check(tokenType) {
       p.advance()
       return true
     }
@@ -540,9 +546,4 @@ func (p *Parser) isEnd() bool {
 
 //     p.advance()
 //   }
-// }
-
-// func (p *Parser) consume(tokenType token.TokenType, message string) token.Token {
-//   if p.check(tokenType) { return p.advance() }
-//   panic(ParseError{token: p.peek(), message: message})
 // }
