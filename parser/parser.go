@@ -1,13 +1,25 @@
-
-// parser
 package parser
 
-// import "fmt"
+import "fmt"
+import "neweos.de/sube/token"
+import "neweos.de/sube/lexer"
 
-// type Parser struct {
-//   tokens  []token.Token
-//   current int
-// }
+type Parser struct {
+  tokens  []lexer.Token
+  current int
+}
+
+func (p *Parser) previous() lexer.Token {
+  return p.tokens[p.current-1]
+}
+
+func (p *Parser) peek() lexer.Token {
+  return p.tokens[p.current]
+}
+
+func (p *Parser) isEnd() bool {
+  return p.peek().Type == token.EOF
+}
 
 // func Parse(tokens []token.Token) []ast.Statement {
 //   p := Parser{current: 0}
@@ -534,16 +546,4 @@ package parser
 // func (p *Parser) advance() token.Token {
 //   if !p.isEnd() { p.current += 1 }
 //   return p.previous()
-// }
-
-// func (p *Parser) previous() token.Token {
-//   return p.tokens[p.current - 1]
-// }
-
-// func (p *Parser) peek() token.Token {
-//   return p.tokens[p.current]
-// }
-
-// func (p *Parser) isEnd() bool {
-//   return p.peek().Type == token.EOF
 // }
