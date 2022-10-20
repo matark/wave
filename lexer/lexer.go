@@ -2,12 +2,6 @@ package lexer
 
 import "neweos.de/sube/token"
 
-type Token struct {
-  Value string
-  Kind  token.Token
-  Pos   token.Position
-}
-
 type Lexer struct {
   tokens  []Token
   input   []rune
