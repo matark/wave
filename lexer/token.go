@@ -9,7 +9,10 @@ type Token struct {
 }
 
 func (tok Token) String() string {
-  return ""
+  if tok.Type.IsLiteral() {
+    return tok.Type.String() + "(" + tok.Lexeme() + ")"
+  }
+  return tok.Type.String()
 }
 
 func (tok Token) Lexeme() string {
@@ -24,5 +27,3 @@ func (tok Token) Lexeme() string {
       return tok.Value
   }
 }
-
-// Pos   token.Position

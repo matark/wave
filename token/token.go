@@ -99,12 +99,12 @@ func (tok Token) IsOperator() bool {
   return Nil < tok && tok <= Tilde
 }
 
-func (tok Token) IsLiteral() bool {
-  return 0 < tok && tok <= Nil
-}
-
 func (tok Token) IsKeyword() bool {
   return Tilde < tok && tok < Illegal
+}
+
+func (tok Token) IsLiteral() bool {
+  return Int <= tok && tok < Nil
 }
 
 func Lookup(name string) Token {
