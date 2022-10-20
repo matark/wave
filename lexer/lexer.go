@@ -1,5 +1,6 @@
 package lexer
 
+import "fmt"
 import "neweos.de/sube/token"
 
 type Lexer struct {
@@ -82,7 +83,9 @@ func (l *Lexer) identifierToken(c rune) bool {
     return true
   }
 
-  // println(string(c))
+  message := fmt.Sprintf("unexpected '%c'", c)
+  l.addToken(token.Illegal, message)
+
   return false
 }
 
@@ -95,7 +98,7 @@ func (l *Lexer) stringToken(c rune) bool {
     }
 
     if l.isEnd() {
-      // report(l.line, "unterminated string")
+      l.addToken(token.Illegal, "unterminated string")
       return false
     }
 
