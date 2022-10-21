@@ -43,7 +43,7 @@ type Identifier struct {
 
 type Literal struct {
   Type  token.Token
-  Value string
+  Value interface{}
   Expression
 }
 

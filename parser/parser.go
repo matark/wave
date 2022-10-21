@@ -1,6 +1,7 @@
 package parser
 
 import "fmt"
+import "strconv"
 import "neweos.de/sube/ast"
 import "neweos.de/sube/lexer"
 import "neweos.de/sube/token"
@@ -10,27 +11,49 @@ type Parser struct {
   current int
 }
 
-func (p *Parser) primary() ast.Expression {
-  // tok := p.previous()
-  // if p.match(token.Bool) {
-  //   return ast.Literal{
-  //     Type: tok.Type,
-  //     Value: tok.Value,
-  //   }
-  // }
+// func (p *Parser) setInput(tokens []token.Token) {
+//   p.tokens = tokens
+// }
+// func (p *Parser) program() []ast.Statement {
+//   statements := make([]ast.Statement, 0)
 
-  //   if p.match(token.Nil)   { return ast.LiteralExpression{Value: nil}   }
-  //   if p.match(token.Number, token.String) {
-  //     return ast.LiteralExpression{Value: p.previous().Literal}
-  //   }
-}
-
-//   if p.match(token.Super) {
-//     keyword := p.previous()
-//     p.consume(token.Dot, "Expect '.' after 'super'")
-//     method := p.consume(token.Identifier, "Expect superclass method name")
-//     return ast.SuperExpression{Keyword: keyword, Method: method}
+//   for {
+//     if p.isEnd() { break }
+//     statements = append(statements, p.declaration())
 //   }
+
+//   return statements
+// }
+func (p *Parser) primary() ast.Expression {
+  if p.match(token.Nil) {
+    return ast.Literal{Type: token.Nil, Value: nil}
+  }
+
+  if p.match(token.Bool) {
+    tok := p.previous()
+    value, _ := strconv.ParseBool(tok.Value)
+    return ast.Literal{Type: token.Bool, Value: value}
+  }
+
+  if p.match(token.Int) {
+    tok := p.previous()
+    value, _ := strconv.Atoi(tok.Value)
+    return ast.Literal{Type: token.Int, Value: value}
+  }
+
+  if p.match(token.String) {
+    tok := p.previous()
+    return ast.Literal{Type: token.String, Value: tok.Value}
+  }
+
+  //   if p.match(token.Super) {
+  //     keyword := p.previous()
+  //     p.consume(token.Dot, "Expect '.' after 'super'")
+  //     method := p.consume(token.Identifier, "Expect superclass method name")
+  //     return ast.SuperExpression{Keyword: keyword, Method: method}
+  //   }
+  return ast.Literal{Value: nil}
+}
 
 //   if p.match(token.Self)       { return ast.SelfExpression{Keyword: p.previous()}  }
 //   if p.match(token.Identifier) { return ast.VariableExpression{Name: p.previous()} }
@@ -87,21 +110,6 @@ func (p *Parser) isEnd() bool {
 //   p.setInput(tokens)
 
 //   return p.program()
-// }
-
-// func (p *Parser) setInput(tokens []token.Token) {
-//   p.tokens = tokens
-// }
-
-// func (p *Parser) program() []ast.Statement {
-//   statements := make([]ast.Statement, 0)
-
-//   for {
-//     if p.isEnd() { break }
-//     statements = append(statements, p.declaration())
-//   }
-
-//   return statements
 // }
 
 // func (p *Parser) declaration() ast.Statement {
