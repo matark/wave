@@ -5,7 +5,6 @@ type Acceptable interface {
 }
 
 type Visitor interface {
-
 }
 
 // type Visitor interface {
@@ -31,7 +30,6 @@ type Visitor interface {
 //   VisitEchoStatement(node EchoStatement) interface{}
 //   VisitClassDeclaration(node ClassDeclaration) interface{}
 // }
-
 
 // func (node LiteralExpression) Accept(v Visitor) interface{} {
 //   return v.VisitLiteralExpression(node)
@@ -80,7 +78,6 @@ type Visitor interface {
 // func (node SetExpression) Accept(v Visitor) interface{} {
 //   return v.VisitSetExpression(node)
 // }
-
 
 // func (node IfStatement) Accept(v Visitor) interface{} {
 //   return v.VisitIfStatement(node)

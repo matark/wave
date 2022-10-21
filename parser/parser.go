@@ -1,13 +1,48 @@
 package parser
 
 import "fmt"
-import "neweos.de/sube/token"
+import "neweos.de/sube/ast"
 import "neweos.de/sube/lexer"
+import "neweos.de/sube/token"
 
 type Parser struct {
   tokens  []lexer.Token
   current int
 }
+
+func (p *Parser) primary() ast.Expression {
+  // tok := p.previous()
+  // if p.match(token.Bool) {
+  //   return ast.Literal{
+  //     Type: tok.Type,
+  //     Value: tok.Value,
+  //   }
+  // }
+
+  //   if p.match(token.Nil)   { return ast.LiteralExpression{Value: nil}   }
+  //   if p.match(token.Number, token.String) {
+  //     return ast.LiteralExpression{Value: p.previous().Literal}
+  //   }
+}
+
+//   if p.match(token.Super) {
+//     keyword := p.previous()
+//     p.consume(token.Dot, "Expect '.' after 'super'")
+//     method := p.consume(token.Identifier, "Expect superclass method name")
+//     return ast.SuperExpression{Keyword: keyword, Method: method}
+//   }
+
+//   if p.match(token.Self)       { return ast.SelfExpression{Keyword: p.previous()}  }
+//   if p.match(token.Identifier) { return ast.VariableExpression{Name: p.previous()} }
+
+//   if p.match(token.LeftParen) {
+//     expression := p.expression()
+//     p.consume(token.RightParen, "Expect ')' after expression")
+//     return ast.GroupingExpression{Expression: expression}
+//   }
+
+//   panic(ParseError{token: p.peek(), message: "Expect expression"})
+// }
 
 func (p *Parser) consume(tok token.Token, message string) lexer.Token {
   if p.check(tok) { return p.advance() }
@@ -494,34 +529,6 @@ func (p *Parser) isEnd() bool {
 //     Callee: callee,
 //     Paren: paren,
 //   }
-// }
-
-// func (p *Parser) primary() ast.Expression {
-//   if p.match(token.False) { return ast.LiteralExpression{Value: false} }
-//   if p.match(token.True)  { return ast.LiteralExpression{Value: true}  }
-//   if p.match(token.Nil)   { return ast.LiteralExpression{Value: nil}   }
-
-//   if p.match(token.Number, token.String) {
-//     return ast.LiteralExpression{Value: p.previous().Literal}
-//   }
-
-//   if p.match(token.Super) {
-//     keyword := p.previous()
-//     p.consume(token.Dot, "Expect '.' after 'super'")
-//     method := p.consume(token.Identifier, "Expect superclass method name")
-//     return ast.SuperExpression{Keyword: keyword, Method: method}
-//   }
-
-//   if p.match(token.Self)       { return ast.SelfExpression{Keyword: p.previous()}  }
-//   if p.match(token.Identifier) { return ast.VariableExpression{Name: p.previous()} }
-
-//   if p.match(token.LeftParen) {
-//     expression := p.expression()
-//     p.consume(token.RightParen, "Expect ')' after expression")
-//     return ast.GroupingExpression{Expression: expression}
-//   }
-
-//   panic(ParseError{token: p.peek(), message: "Expect expression"})
 // }
 
 // func (p *Parser) synchronize() {
