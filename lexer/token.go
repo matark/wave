@@ -9,10 +9,11 @@ type Token struct {
 }
 
 func (tok Token) String() string {
+  str := tok.Type.String()
   if tok.Type.IsLiteral() {
-    return tok.Type.String() + "(" + tok.Lexeme() + ")"
+    return str + "(" + tok.Lexeme() + ")"
   }
-  return tok.Type.String()
+  return str
 }
 
 func (tok Token) Lexeme() string {

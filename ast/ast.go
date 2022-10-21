@@ -36,9 +36,22 @@ type Unary struct {
   Expression
 }
 
-// type Identifier struct {
-//   Expression
-// }
+type Identifier struct {
+  Name string
+  Expression
+}
+
+type Literal struct {
+  Type  token.Token
+  Value string
+  Expression
+}
+
+type Call struct {
+  Callee    Expression
+  Arguments []Expression
+  Expression
+}
 
 // type Function struct {
 //   Params []token.Token
@@ -137,18 +150,5 @@ type Unary struct {
 //   Name       token.Token
 //   Value      Expression
 //   Object     Expression
-//   Expression
-// }
-
-// type Literal struct {
-//   Type  token.Token
-//   Value string
-//   Expression
-// }
-
-// type CallExpression struct {
-//   Paren      token.Token
-//   Callee     Expression
-//   Arguments  []Expression
 //   Expression
 // }
