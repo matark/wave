@@ -46,26 +46,30 @@ func (p *Parser) primary() ast.Expression {
     return ast.Literal{Type: token.String, Value: tok.Value}
   }
 
-  //   if p.match(token.Super) {
-  //     keyword := p.previous()
-  //     p.consume(token.Dot, "Expect '.' after 'super'")
-  //     method := p.consume(token.Identifier, "Expect superclass method name")
-  //     return ast.SuperExpression{Keyword: keyword, Method: method}
-  //   }
+  if p.match(token.Super) {
+    p.consume(token.Dot, "expect '.' after 'super'")
+    method := p.consume(token.Identifier, "expect superclass method name")
+    return ast.Super{Method: method.Type}
+  }
+
+  if p.match(token.Self) {
+    return ast.Self{}
+  }
+
+  if p.match(token.Identifier) {
+    tok := p.previous()
+    return ast.Variable{Name: tok.Value}
+  }
+
+  if p.match(token.LeftParen) {
+    exp := p.primary()
+    p.consume(token.RightParen, "expect ')' after expression")
+    return ast.Grouping{Expr: exp}
+  }
+
+  //   panic(ParseError{token: p.peek(), message: "Expect expression"})
   return ast.Literal{Value: nil}
 }
-
-//   if p.match(token.Self)       { return ast.SelfExpression{Keyword: p.previous()}  }
-//   if p.match(token.Identifier) { return ast.VariableExpression{Name: p.previous()} }
-
-//   if p.match(token.LeftParen) {
-//     expression := p.expression()
-//     p.consume(token.RightParen, "Expect ')' after expression")
-//     return ast.GroupingExpression{Expression: expression}
-//   }
-
-//   panic(ParseError{token: p.peek(), message: "Expect expression"})
-// }
 
 func (p *Parser) consume(tok token.Token, message string) lexer.Token {
   if p.check(tok) { return p.advance() }

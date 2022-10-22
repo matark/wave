@@ -36,6 +36,11 @@ type Unary struct {
   Expression
 }
 
+type Variable struct {
+  Name string
+  Expression
+}
+
 type Identifier struct {
   Name string
   Expression
@@ -126,11 +131,6 @@ type Call struct {
 //   Left       Expression
 //   Right      Expression
 //   Operator   token.Token
-//   Expression
-// }
-
-// type VariableExpression struct {
-//   Name       token.Token
 //   Expression
 // }
 
