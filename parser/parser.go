@@ -24,6 +24,148 @@ type Parser struct {
 
 //   return statements
 // }
+func (p *Parser) expression() ast.Expression {
+  return p.assignment()
+}
+
+func (p *Parser) assignment() ast.Expression {
+//   expression := p.or()
+
+//   if p.match(token.Equal) {
+//     equals := p.previous()
+//     value := p.assignment()
+
+//     if result, ok := expression.(ast.VariableExpression); ok {
+//       return ast.AssignExpression{
+//         Name: result.Name,
+//         Value: value,
+//       }
+//     }
+
+//     if result, ok := expression.(ast.GetExpression); ok {
+//       return ast.SetExpression{
+//         Object: result.Object,
+//         Name: result.Name,
+//         Value: value,
+//       }
+//     }
+
+//     panic(ParseError{token: equals, message: "Invalid assignment target"})
+//   }
+
+//   return expression
+// }
+}
+
+// func (p *Parser) or() ast.Expression {
+//   expression := p.and()
+
+//   for p.match(token.Or) {
+//     operator := p.previous()
+//     right := p.and()
+//     expression = ast.LogicalExpression{
+//       Operator: operator,
+//       Left: expression,
+//       Right: right,
+//     }
+//   }
+
+//   return expression
+// }
+
+// func (p *Parser) and() ast.Expression {
+//   expression := p.equality()
+
+//   for p.match(token.And) {
+//     operator := p.previous()
+//     right := p.equality()
+//     expression = ast.LogicalExpression{
+//       Operator: operator,
+//       Left: expression,
+//       Right: right,
+//     }
+//   }
+
+//   return expression
+// }
+
+func (p *Parser) equality() ast.Expression {
+//   expression := p.comparison()
+
+//   for p.match(token.BangEqual, token.EqualEqual) {
+//     operator := p.previous()
+//     right := p.comparison()
+//     expression = ast.BinaryExpression{
+//       Operator: operator,
+//       Left: expression,
+//       Right: right,
+//     }
+//   }
+
+//   return expression
+// }
+}
+
+func (p *Parser) comparison() ast.Expression {
+//   expression := p.term()
+
+//   for p.match(token.Greater, token.GreaterEqual, token.Less, token.LessEqual) {
+//     operator := p.previous()
+//     right := p.term()
+//     expression = ast.BinaryExpression{
+//       Operator: operator,
+//       Left: expression,
+//       Right: right,
+//     }
+//   }
+
+//   return expression
+// }
+}
+
+func (p *Parser) term() ast.Expression {
+
+//   expression := p.factor()
+
+//   for p.match(token.Minus, token.Plus) {
+//     operator := p.previous()
+//     right := p.factor()
+//     expression = ast.BinaryExpression{
+//       Operator: operator,
+//       Left: expression,
+//       Right: right,
+//     }
+//   }
+
+//   return expression
+// }
+}
+
+func (p *Parser) factor() ast.Expression {
+  exp := p.unary()
+  //   for p.match(token.Slash, token.Star) {
+  //     operator := p.previous()
+  //     right := p.unary()
+  //     expression = ast.BinaryExpression{
+  //       Operator: operator,
+  //       Left: expression,
+  //       Right: right,
+  //     }
+  //   }
+
+  //   return expression
+  // }
+}
+
+func (p *Parser) unary() ast.Expression {
+  if p.match(token.Bang, token.Minus) {
+    return ast.Unary{
+      Operator: p.previous().Type,
+      Right: p.unary(),
+    }
+  }
+  return p.call()
+}
 
 func (p *Parser) call() ast.Expression {
   exp := p.primary()
@@ -396,148 +538,6 @@ func (p *Parser) isEnd() bool {
 //   }
 
 //   return p.expressionStatement()
-// }
-
-// func (p *Parser) expression() ast.Expression {
-//   return p.assignment()
-// }
-
-// func (p *Parser) assignment() ast.Expression {
-//   expression := p.or()
-
-//   if p.match(token.Equal) {
-//     equals := p.previous()
-//     value := p.assignment()
-
-//     if result, ok := expression.(ast.VariableExpression); ok {
-//       return ast.AssignExpression{
-//         Name: result.Name,
-//         Value: value,
-//       }
-//     }
-
-//     if result, ok := expression.(ast.GetExpression); ok {
-//       return ast.SetExpression{
-//         Object: result.Object,
-//         Name: result.Name,
-//         Value: value,
-//       }
-//     }
-
-//     panic(ParseError{token: equals, message: "Invalid assignment target"})
-//   }
-
-//   return expression
-// }
-
-// func (p *Parser) or() ast.Expression {
-//   expression := p.and()
-
-//   for p.match(token.Or) {
-//     operator := p.previous()
-//     right := p.and()
-//     expression = ast.LogicalExpression{
-//       Operator: operator,
-//       Left: expression,
-//       Right: right,
-//     }
-//   }
-
-//   return expression
-// }
-
-// func (p *Parser) and() ast.Expression {
-//   expression := p.equality()
-
-//   for p.match(token.And) {
-//     operator := p.previous()
-//     right := p.equality()
-//     expression = ast.LogicalExpression{
-//       Operator: operator,
-//       Left: expression,
-//       Right: right,
-//     }
-//   }
-
-//   return expression
-// }
-
-// func (p *Parser) equality() ast.Expression {
-//   expression := p.comparison()
-
-//   for p.match(token.BangEqual, token.EqualEqual) {
-//     operator := p.previous()
-//     right := p.comparison()
-//     expression = ast.BinaryExpression{
-//       Operator: operator,
-//       Left: expression,
-//       Right: right,
-//     }
-//   }
-
-//   return expression
-// }
-
-// func (p *Parser) comparison() ast.Expression {
-//   expression := p.term()
-
-//   for p.match(token.Greater, token.GreaterEqual, token.Less, token.LessEqual) {
-//     operator := p.previous()
-//     right := p.term()
-//     expression = ast.BinaryExpression{
-//       Operator: operator,
-//       Left: expression,
-//       Right: right,
-//     }
-//   }
-
-//   return expression
-// }
-
-// func (p *Parser) term() ast.Expression {
-//   expression := p.factor()
-
-//   for p.match(token.Minus, token.Plus) {
-//     operator := p.previous()
-//     right := p.factor()
-//     expression = ast.BinaryExpression{
-//       Operator: operator,
-//       Left: expression,
-//       Right: right,
-//     }
-//   }
-
-//   return expression
-// }
-
-// func (p *Parser) factor() ast.Expression {
-//   expression := p.unary()
-
-//   for p.match(token.Slash, token.Star) {
-//     operator := p.previous()
-//     right := p.unary()
-//     expression = ast.BinaryExpression{
-//       Operator: operator,
-//       Left: expression,
-//       Right: right,
-//     }
-//   }
-
-//   return expression
-// }
-
-// func (p *Parser) unary() ast.Expression {
-//   if p.match(token.Bang, token.Minus) {
-//     operator := p.previous()
-//     right := p.unary()
-
-//     return ast.UnaryExpression{
-//       Operator: operator,
-//       Right: right,
-//     }
-//   }
-
-//   return p.call()
 // }
 
 // func (p *Parser) synchronize() {
