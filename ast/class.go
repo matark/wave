@@ -1,7 +1,5 @@
 package ast
 
-import "neweos.de/sube/token"
-
 type ClassDeclaration struct {
   //   Name        token.Token
   //   Methods     []ClassMethod
@@ -11,11 +9,24 @@ type ClassDeclaration struct {
 }
 
 type Super struct {
-  Method token.Token
+  Method string
   Expression
 }
 
 type Self struct {
+  Expression
+}
+
+type Get struct {
+  Property string
+  Object   Expression
+  Expression
+}
+
+type Set struct {
+  Property string
+  Object   Expression
+  Value    Expression
   Expression
 }
 //   Keyword    token.Token

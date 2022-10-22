@@ -139,16 +139,3 @@ type Call struct {
 //   Value      Expression
 //   Expression
 // }
-
-// type GetExpression struct {
-//   Name       token.Token
-//   Object     Expression
-//   Expression
-// }
-
-// type SetExpression struct {
-//   Name       token.Token
-//   Value      Expression
-//   Object     Expression
-//   Expression
-// }

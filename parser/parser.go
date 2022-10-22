@@ -24,6 +24,48 @@ type Parser struct {
 
 //   return statements
 // }
+
+func (p *Parser) call() ast.Expression {
+  exp := p.primary()
+
+  for {
+    if p.match(token.LeftParen) {
+      exp = p.finishCall(exp)
+      continue
+    }
+
+    if p.match(token.Dot) {
+      tok := p.consume(token.Identifier, "expect property name after '.'")
+      exp = ast.Get{Property: tok.Value, Object: exp}
+      continue
+    }
+    break
+  }
+  return exp
+}
+
+func (p *Parser) finishCall(callee ast.Expression) ast.Expression {
+  args := make([]ast.Expression, 0)
+
+  if !p.check(token.RightParen) {
+    for {
+      if len(args) >= 255 {
+        // panic(ParseError{token: p.peek(), message: "Can't have more than 255 arguments"})
+        panic("error")
+      }
+
+      // arguments = append(arguments, p.expression())
+      args = append(args, p.primary())
+      if !p.match(token.Comma) {
+        break
+      }
+    }
+  }
+
+  p.consume(token.RightParen, "expect ')' after args")
+  return ast.Call{Arguments: args, Callee: callee}
+}
+
 func (p *Parser) primary() ast.Expression {
   if p.match(token.Nil) {
     return ast.Literal{Type: token.Nil, Value: nil}
@@ -48,8 +90,8 @@ func (p *Parser) primary() ast.Expression {
 
   if p.match(token.Super) {
     p.consume(token.Dot, "expect '.' after 'super'")
-    method := p.consume(token.Identifier, "expect superclass method name")
-    return ast.Super{Method: method.Type}
+    tok := p.consume(token.Identifier, "expect superclass method name")
+    return ast.Super{Method: tok.Value}
   }
 
   if p.match(token.Self) {
@@ -496,51 +538,6 @@ func (p *Parser) isEnd() bool {
 //   }
 
 //   return p.call()
-// }
-
-// func (p *Parser) call() ast.Expression {
-//   expression := p.primary()
-
-//   for {
-//     if p.match(token.LeftParen) {
-//       expression = p.finishCall(expression)
-//       continue
-//     }
-
-//     if p.match(token.Dot) {
-//       name := p.consume(token.Identifier, "Expect property name after '.'")
-//       expression = ast.GetExpression{Name: name, Expression: expression}
-//       continue
-//     }
-
-//     break
-//   }
-
-//   return expression
-// }
-
-// func (p *Parser) finishCall(callee ast.Expression) ast.Expression {
-//   arguments := make([]ast.Expression, 0)
-
-//   if !p.check(token.RightParen) {
-//     for {
-//       if len(arguments) >= 255 {
-//         panic(ParseError{token: p.peek(), message: "Can't have more than 255 arguments"})
-//       }
-
-//       arguments = append(arguments, p.expression())
-//       if !p.match(token.Comma) {
-//         break
-//       }
-//     }
-//   }
-
-//   paren := p.consume(token.RightParen, "Expect ')' after arguments")
-//   return ast.CallExpression{
-//     Arguments: arguments,
-//     Callee: callee,
-//     Paren: paren,
-//   }
 // }
 
 // func (p *Parser) synchronize() {
