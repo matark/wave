@@ -32,28 +32,26 @@ func (p *Parser) assignment() ast.Expression {
   exp := p.or()
 
   if p.match(token.Equal) {
+    tok := p.previous()
+    rhs := p.assignment()
 
-//     equals := p.previous()
-//     value := p.assignment()
-
-//     if result, ok := expression.(ast.VariableExpression); ok {
-//       return ast.AssignExpression{
-//         Name: result.Name,
-//         Value: value,
-//       }
-//     }
-
-//     if result, ok := expression.(ast.GetExpression); ok {
-//       return ast.SetExpression{
-//         Object: result.Object,
-//         Name: result.Name,
-//         Value: value,
-//       }
-//     }
-
-//     panic(ParseError{token: equals, message: "Invalid assignment target"})
-//   }
-
+    switch lhs := exp.(type) {
+      case ast.Variable:
+        return ast.Assignment{
+          Operator: tok.Type,
+          Right: rhs,
+          Left: lhs,
+        }
+      case ast.Get:
+        return ast.Set{
+          Property: lhs.Property,
+          Object: lhs.Object,
+          Value: rhs,
+        }
+      default:
+        //     panic(ParseError{token: equals, message: "Invalid assignment target"})
+        panic("error")
+    }
   }
   return exp
 }
