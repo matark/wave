@@ -132,37 +132,33 @@ func (p *Parser) comparison() ast.Expression {
 }
 
 func (p *Parser) term() ast.Expression {
+  exp := p.factor()
 
-//   expression := p.factor()
-
-//   for p.match(token.Minus, token.Plus) {
-//     operator := p.previous()
-//     right := p.factor()
-//     expression = ast.BinaryExpression{
-//       Operator: operator,
-//       Left: expression,
-//       Right: right,
-//     }
-//   }
-
-//   return expression
-// }
+  for p.match(token.Plus, token.Minus) {
+    tok := p.previous()
+    rhs := p.factor()
+    exp = ast.Binary{
+      Operator: tok.Type,
+      Right: rhs,
+      Left: exp,
+    }
+  }
+  return exp
 }
 
 func (p *Parser) factor() ast.Expression {
   exp := p.unary()
-  //   for p.match(token.Slash, token.Star) {
-  //     operator := p.previous()
-  //     right := p.unary()
-  //     expression = ast.BinaryExpression{
-  //       Operator: operator,
-  //       Left: expression,
-  //       Right: right,
-  //     }
-  //   }
 
-  //   return expression
-  // }
+  for p.match(token.Star, token.Slash, token.Modulo) {
+    tok := p.previous()
+    rhs := p.unary()
+    exp = ast.Binary{
+      Operator: tok.Type,
+      Right: rhs,
+      Left: exp,
+    }
+  }
+  return exp
 }
 
 func (p *Parser) unary() ast.Expression {
