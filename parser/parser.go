@@ -29,10 +29,9 @@ func (p *Parser) expression() ast.Expression {
 }
 
 func (p *Parser) assignment() ast.Expression {
-  expression := p.logicOr()
+  exp := p.or()
 
   if p.match(token.Equal) {
-  }
 
 //     equals := p.previous()
 //     value := p.assignment()
@@ -55,47 +54,39 @@ func (p *Parser) assignment() ast.Expression {
 //     panic(ParseError{token: equals, message: "Invalid assignment target"})
 //   }
 
-//   return expression
-// }
+  }
+  return exp
 }
 
-func (p *Parser) logicOr() ast.Expression {
+func (p *Parser) or() ast.Expression {
+  exp := p.and()
 
+  for p.match(token.OrOr) {
+    tok := p.previous()
+    rhs := p.and()
+    exp = ast.Logical{
+      Operator: tok.Type,
+      Right: rhs,
+      Left: exp,
+    }
+  }
+  return exp
 }
-// func (p *Parser) or() ast.Expression {
-//   expression := p.and()
 
-//   for p.match(token.Or) {
-//     operator := p.previous()
-//     right := p.and()
-//     expression = ast.LogicalExpression{
-//       Operator: operator,
-//       Left: expression,
-//       Right: right,
-//     }
-//   }
+func (p *Parser) and() ast.Expression {
+  exp := p.equality()
 
-//   return expression
-// }
-
-func (p *Parser) logicAnd() ast.Expression {
-
+  for p.match(token.AndAnd) {
+    tok := p.previous()
+    rhs := p.equality()
+    exp = ast.Logical{
+      Operator: tok.Type,
+      Right: rhs,
+      Left: exp,
+    }
+  }
+  return exp
 }
-// func (p *Parser) and() ast.Expression {
-//   expression := p.equality()
-
-//   for p.match(token.And) {
-//     operator := p.previous()
-//     right := p.equality()
-//     expression = ast.LogicalExpression{
-//       Operator: operator,
-//       Left: expression,
-//       Right: right,
-//     }
-//   }
-
-//   return expression
-// }
 
 func (p *Parser) equality() ast.Expression {
   exp := p.comparison()
