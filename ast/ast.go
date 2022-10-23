@@ -18,6 +18,13 @@ type Declaration interface {
   Statement
 }
 
+type Logical struct {
+  Operator token.Token
+  Right    Expression
+  Left     Expression
+  Expression
+}
+
 type Grouping struct {
   Expr Expression
   Expression
@@ -125,13 +132,6 @@ type Call struct {
 //   Name        token.Token
 //   Initializer Expression
 //   Declaration
-// }
-
-// type LogicalExpression struct {
-//   Left       Expression
-//   Right      Expression
-//   Operator   token.Token
-//   Expression
 // }
 
 // type AssignExpression struct {

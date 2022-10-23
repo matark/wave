@@ -29,9 +29,11 @@ func (p *Parser) expression() ast.Expression {
 }
 
 func (p *Parser) assignment() ast.Expression {
-//   expression := p.or()
+  expression := p.logicOr()
 
-//   if p.match(token.Equal) {
+  if p.match(token.Equal) {
+  }
+
 //     equals := p.previous()
 //     value := p.assignment()
 
@@ -57,6 +59,9 @@ func (p *Parser) assignment() ast.Expression {
 // }
 }
 
+func (p *Parser) logicOr() ast.Expression {
+
+}
 // func (p *Parser) or() ast.Expression {
 //   expression := p.and()
 
@@ -73,6 +78,9 @@ func (p *Parser) assignment() ast.Expression {
 //   return expression
 // }
 
+func (p *Parser) logicAnd() ast.Expression {
+
+}
 // func (p *Parser) and() ast.Expression {
 //   expression := p.equality()
 
@@ -159,9 +167,11 @@ func (p *Parser) factor() ast.Expression {
 
 func (p *Parser) unary() ast.Expression {
   if p.match(token.Bang, token.Minus) {
+    tok := p.previous()
+    exp := p.unary()
     return ast.Unary{
-      Operator: p.previous().Type,
-      Right: p.unary(),
+      Operator: tok.Type,
+      Right: exp,
     }
   }
   return p.call()
@@ -252,7 +262,7 @@ func (p *Parser) primary() ast.Expression {
   }
 
   //   panic(ParseError{token: p.peek(), message: "Expect expression"})
-  return ast.Literal{Value: nil}
+  panic("error")
 }
 
 func (p *Parser) consume(tok token.Token, message string) lexer.Token {
