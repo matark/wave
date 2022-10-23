@@ -98,37 +98,33 @@ func (p *Parser) logicAnd() ast.Expression {
 // }
 
 func (p *Parser) equality() ast.Expression {
-//   expression := p.comparison()
+  exp := p.comparison()
 
-//   for p.match(token.BangEqual, token.EqualEqual) {
-//     operator := p.previous()
-//     right := p.comparison()
-//     expression = ast.BinaryExpression{
-//       Operator: operator,
-//       Left: expression,
-//       Right: right,
-//     }
-//   }
-
-//   return expression
-// }
+  for p.match(token.BangEq, token.EqualEq) {
+    tok := p.previous()
+    rhs := p.comparison()
+    exp = ast.Binary{
+      Operator: tok.Type,
+      Right: rhs,
+      Left: exp,
+    }
+  }
+  return exp
 }
 
 func (p *Parser) comparison() ast.Expression {
-//   expression := p.term()
+  exp := p.term()
 
-//   for p.match(token.Greater, token.GreaterEqual, token.Less, token.LessEqual) {
-//     operator := p.previous()
-//     right := p.term()
-//     expression = ast.BinaryExpression{
-//       Operator: operator,
-//       Left: expression,
-//       Right: right,
-//     }
-//   }
-
-//   return expression
-// }
+  for p.match(token.Greater, token.GreaterEq, token.Less, token.LessEq) {
+    tok := p.previous()
+    rhs := p.term()
+    exp = ast.Binary{
+      Operator: tok.Type,
+      Right: rhs,
+      Left: exp,
+    }
+  }
+  return exp
 }
 
 func (p *Parser) term() ast.Expression {
