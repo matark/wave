@@ -90,6 +90,7 @@ func (tok Token) Precedence() int {
          Minus:  return 4
     case And,
          Star,
+         Slash,
          Modulo: return 5
     default:     return 0
   }
@@ -108,9 +109,7 @@ func (tok Token) IsLiteral() bool {
 }
 
 func Lookup(name string) Token {
-  if tok, ok := keywords[name]; ok {
-    return tok
-  }
-
+  tok, ok := keywords[name]
+  if ok { return tok }
   return Identifier
 }
